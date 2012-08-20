@@ -18,7 +18,7 @@ module NavigationHelpers
     case page_name
 
     when /^the home\s?page$/
-      '/'
+      '/movies'
     when /^the edit page for "(.*)"/
       id = movieId($1)
       "/movies/#{id}/edit"

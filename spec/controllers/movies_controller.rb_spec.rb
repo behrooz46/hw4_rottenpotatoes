@@ -20,5 +20,24 @@ describe MoviesController do
       mock.should_receive(:update_attributes!)
       post :update, {:id => '13', :movie => mock2 }
     end
+    it 'When I follow "Find Movies With Same Director", I should be on the Similar Movies page for the Movie' do
+      mock = mock('Movie')
+      mock.stub!(:director).and_return('mock director')
+      
+      similarMocks = [mock('Movie'), mock('Movie')]
+      
+      Movie.should_receive(:find).with('13').and_return(mock)
+      Movie.should_receive(:find_all_by_director).with(mock.director).and_return(similarMocks)
+      get :similar, {:id => '13'}
+    end
+    it 'should redirect to index if movie does not have a director' do
+      mock = mock('Movie')
+      mock.stub!(:director).and_return(nil)
+      mock.stub!(:title).and_return(nil)
+      
+      Movie.should_receive(:find).with('13').and_return(mock)
+      get :similar, {:id => '13'}
+      response.should redirect_to(movies_path)
+    end
   end
 end
